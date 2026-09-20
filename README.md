@@ -153,61 +153,57 @@ erDiagram
 
 ```plaintext
 FormaPRO/
-├── BackEnd/                      # Servidor NestJS & Banco de Dados
-│   ├── prisma/
-│   │   ├── migrations/           # Histórico de migrações relacionais
-│   │   └── schema.prisma         # Modelos e relações do Prisma ORM
-│   ├── src/
-│   │   ├── assinaturas/          # Módulo de Assinaturas de Planos
-│   │   ├── aulas/                # Módulo de Conteúdo e Aulas
-│   │   ├── auth/                 # Autenticação JWT e login
-│   │   ├── avaliacoes/           # Avaliações de cursos pelos alunos
-│   │   ├── carreira-trilhas/     # Associação Carreira x Trilhas
-│   │   ├── carreiras/            # Formações e Carreiras profissionais
-│   │   ├── categoria/            # Categorias temáticas
-│   │   ├── certificados/         # Emissão e validação de certificados
-│   │   ├── cursos/               # Cadastro e catálogo de cursos
-│   │   ├── matriculas/           # Inscrições de alunos
-│   │   ├── modulo/               # Módulos pedagógicos
-│   │   ├── pagamentos/           # Transações financeiras
-│   │   ├── planos/               # Planos de assinatura
-│   │   ├── prisma/               # Prisma Service & Provider de conexão
-│   │   ├── progresso-aulas/      # Tracking aula a aula do aluno
-│   │   ├── trilha-cursos/        # Associação Trilha x Cursos
-│   │   ├── trilhas/              # Trilhas de conhecimento
-│   │   ├── users/                # Gestão de usuários e perfis
-│   │   ├── app.module.ts         # Módulo raiz do NestJS
-│   │   └── main.ts               # Ponto de entrada com CORS e Swagger
-│   ├── .env.example              # Modelo de variáveis de ambiente
-│   ├── package.json              # Dependências e scripts do Back-End
-│   └── README.md                 # Documentação detalhada da API
+├── BackEnd/               # API RESTful (NestJS + Prisma + PostgreSQL)
+│   ├── prisma/            # Migrações e schema relacional do banco
+│   ├── src/               # Módulos de negócio da aplicação
+│   ├── .env.example       # Template de variáveis de ambiente
+│   ├── package.json       # Dependências e scripts do backend
+│   └── README.md          # Documentação detalhada da API
 │
-├── FrontEnd/                     # Aplicação Single Page Application (React)
-│   ├── public/                   # Recursos estáticos
-│   ├── src/
-│   │   ├── assets/               # Imagens e ícones
-│   │   ├── components/           # Componentes reutilizáveis (Navbar, Footer, etc.)
-│   │   ├── models/               # Interfaces e tipagens TypeScript
-│   │   ├── pages/                # Páginas da aplicação
-│   │   │   ├── AdministracaoPages/ # Painel e abas de gestão administrativa
-│   │   │   ├── CertificadoPages/   # Exibição e validação de certificados
-│   │   │   ├── HomePages/          # Página inicial e catálogo de cursos
-│   │   │   ├── LoginPages/         # Telas de login e cadastro
-│   │   │   ├── MontadorCursoPages/ # Interface de criação de cursos/módulos
-│   │   │   ├── PagamentoPages/     # Checkout e escolha de planos
-│   │   │   ├── PainelAlunoPages/   # Dashboard do estudante
-│   │   │   └── SalaAulaPages/      # Player de vídeo e grade curricular
-│   │   ├── routers/              # Configuração do React Router
-│   │   ├── services/             # Instância Axios e integração com API
-│   │   ├── App.tsx               # Componente principal
-│   │   └── main.tsx              # Ponto de inicialização do React
-│   ├── db.json                   # Base de dados mockada (JSON Server)
-│   ├── package.json              # Dependências e scripts do Front-End
-│   └── vite.config.ts            # Configurações do Vite
+├── FrontEnd/              # Interface Web SPA (React + Vite + Bootstrap)
+│   ├── public/            # Arquivos estáticos
+│   ├── src/               # Componentes, páginas e serviços
+│   ├── db.json            # Base mockada (JSON Server)
+│   ├── package.json       # Dependências e scripts do frontend
+│   └── vite.config.ts     # Configuração de build do Vite
 │
-├── .gitignore                    # Arquivo unificado de ignorados pelo Git
-└── README.md                     # Documentação geral do projeto
+├── .gitignore             # Regras de exclusão do Git para o monorepo
+└── README.md              # Documentação principal do projeto
 ```
+
+<details>
+<summary><b>🔍 Detalhes da Estrutura do Back-End (<code>BackEnd/src/</code>)</b></summary>
+
+| Módulo | Responsabilidade |
+| :--- | :--- |
+| `auth/` | Autenticação de usuários, login e geração de tokens JWT |
+| `users/` | Cadastro e gerenciamento de perfis (Aluno, Instrutor, Admin) |
+| `cursos/`, `modulo/`, `aulas/` | Gestão pedagógica, catálogo de cursos, módulos e aulas |
+| `trilhas/`, `trilha-cursos/` | Trilhas de aprendizado e associação sequencial de cursos |
+| `carreiras/`, `carreira-trilhas/` | Carreiras profissionais e vinculação de trilhas |
+| `matriculas/`, `progresso-aulas/` | Inscrição de alunos e acompanhamento de progresso aula a aula |
+| `certificados/` | Emissão e verificação de certificados com código de autenticidade |
+| `planos/`, `assinaturas/`, `pagamentos/` | Planos de acesso, assinaturas ativas e transações |
+| `prisma/` | Conexão e ciclo de vida do Prisma Client |
+
+</details>
+
+<details>
+<summary><b>🔍 Detalhes da Estrutura do Front-End (<code>FrontEnd/src/</code>)</b></summary>
+
+| Diretório | Responsabilidade |
+| :--- | :--- |
+| `pages/HomePages/` | Vitrine inicial com catálogo de cursos e trilhas |
+| `pages/SalaAulaPages/` | Player de vídeo e grade curricular interativa |
+| `pages/PainelAlunoPages/` | Dashboard do aluno com cursos em andamento e progresso |
+| `pages/AdministracaoPages/` | Painel de controle e abas de gestão administrativa |
+| `pages/MontadorCursoPages/` | Interface interativa para criação de cursos, módulos e aulas |
+| `pages/CertificadoPages/` | Visualização e validação de certificados emitidos |
+| `pages/PagamentoPages/` | Escolha de planos e fluxo de checkout |
+| `components/` | Componentes compartilhados (Navbar, Footer, Modais) |
+| `services/` | Instância do Axios (`api.ts`) com interceptors para tokens JWT |
+
+</details>
 
 ---
 
