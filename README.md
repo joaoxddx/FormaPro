@@ -16,31 +16,38 @@ O projeto é estruturado no formato monorepo organizado em duas camadas independ
 
 ```mermaid
 flowchart TD
-    subgraph Client ["🖥️ Front-End (Client SPA)"]
-        UI["Interface do Usuário\n(React 19 + TypeScript + Vite)"]
-        Router["Roteamento Dinâmico\n(React Router DOM)"]
-        Styles["Estilização & Componentes\n(Bootstrap 5 & Lucide Icons)"]
-        AxiosClient["Cliente HTTP\n(Axios com Interceptors JWT)"]
-        UI --> Router --> Styles --> AxiosClient
+    subgraph Client["Front-End (Client SPA)"]
+        UI["Interface do Usuário<br/>(React 19 + TypeScript + Vite)"]
+        Router["Roteamento Dinâmico<br/>(React Router DOM)"]
+        Styles["Estilização & Componentes<br/>(Bootstrap 5 & Lucide Icons)"]
+        AxiosClient["Cliente HTTP<br/>(Axios com Interceptors JWT)"]
+        
+        UI --> Router
+        Router --> Styles
+        Styles --> AxiosClient
     end
 
-    subgraph Server ["⚙️ Back-End (API RESTful)"]
-        Gateway["Servidor HTTP\n(NestJS v11 + Express)"]
-        Guards["Segurança & Autenticação\n(JWT Guard & Passport)"]
-        Pipes["Validação & DTOs\n(class-validator & class-transformer)"]
-        Controllers["Controllers REST\n(Swagger / OpenAPI)"]
-        Services["Camada de Serviços\n(Regras de Negócio)"]
-        ORM["Mapeamento Objeto-Relacional\n(Prisma ORM v7)"]
+    subgraph Server["Back-End (API RESTful)"]
+        Gateway["Servidor HTTP<br/>(NestJS v11 + Express)"]
+        Guards["Segurança & Autenticação<br/>(JWT Guard & Passport)"]
+        Pipes["Validação & DTOs<br/>(class-validator & class-transformer)"]
+        Controllers["Controllers REST<br/>(Swagger / OpenAPI)"]
+        Services["Camada de Serviços<br/>(Regras de Negócio)"]
+        ORM["Mapeamento Objeto-Relacional<br/>(Prisma ORM v7)"]
 
-        Gateway --> Guards --> Pipes --> Controllers --> Services --> ORM
+        Gateway --> Guards
+        Guards --> Pipes
+        Pipes --> Controllers
+        Controllers --> Services
+        Services --> ORM
     end
 
-    subgraph Database ["🗄️ Persistência de Dados"]
-        Postgres[(Banco de Dados Relacional\nPostgreSQL)]
+    subgraph Database["Persistência de Dados"]
+        Postgres[("Banco de Dados Relacional<br/>PostgreSQL")]
     end
 
-    AxiosClient -- "Requisições HTTP / JSON (Bearer Token)" --> Gateway
-    ORM -- "Queries SQL Seguras (@prisma/adapter-pg)" --> Postgres
+    AxiosClient -->|"Requisições HTTP / JSON (Bearer Token)"| Gateway
+    ORM -->|"Queries SQL Seguras (Prisma Client)"| Postgres
 ```
 
 ---
