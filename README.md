@@ -87,28 +87,28 @@ flowchart TD
 
 | Tecnologia                      | Finalidade                                                                       |
 | :------------------------------ | :------------------------------------------------------------------------------- |
-| **React 19**              | Biblioteca base para construção de interfaces reativas e performáticas        |
-| **TypeScript**            | Tipagem estática para maior previsibilidade e segurança de código             |
-| **Vite 6**                | Bundler de alta performance com hot-module replacement instantâneo              |
-| **React Router DOM 7**    | Gerenciamento de rotas e navegação client-side                                 |
-| **Bootstrap 5.3 & Icons** | Framework de componentes visuais, grids responsivos e ícones                    |
-| **Lucide React**          | Conjunto moderno e consistente de ícones vetoriais                              |
-| **Axios**                 | Cliente HTTP com suporte a interceptors para injeção automática de tokens JWT |
-| **JSON Server**           | API mock para suporte a testes e prototipagem local isolada                      |
+| **React 19**              | Biblioteca base para construção de interfaces reativas e performáticas                 |
+| **TypeScript**            | Tipagem estática para maior previsibilidade e segurança de código                      |
+| **Vite 6**                | Bundler de alta performance com hot-module replacement instantâneo                     |
+| **React Router DOM 7**    | Gerenciamento de rotas e navegação client-side                                         |
+| **Bootstrap 5.3 & Icons** | Framework de componentes visuais, grids responsivos e ícones                           |
+| **Lucide React**          | Conjunto moderno e consistente de ícones vetoriais                                     |
+| **Axios**                 | Cliente HTTP com suporte a interceptors para injeção automática de tokens JWT          |
+| **JSON Server**           | API mock para suporte a testes e prototipagem local isolada                            |
 
 ### Back-End
 
 | Tecnologia                              | Finalidade                                                                    |
 | :-------------------------------------- | :---------------------------------------------------------------------------- |
-| **NestJS 11**                     | Framework corporativo em Node.js com arquitetura modular e escalável         |
-| **TypeScript**                    | Desenvolvimento backend tipado com suporte a decoradores                      |
-| **Prisma ORM 7**                  | ORM moderno para modelagem declarativa e geração segura de queries          |
-| **PostgreSQL**                    | Sistema gerenciador de banco de dados relacional robusto e confiável         |
-| **Passport & JWT**                | Autenticação stateless via JSON Web Tokens e proteção de rotas com Guards |
-| **Bcrypt.js**                     | Algoritmo criptográfico de dispersão unidirecional com salt para senhas     |
-| **Class Validator & Transformer** | Validação, sanitização e transformação de payloads DTO                  |
-| **Swagger / OpenAPI**             | Geração automatizada de documentação interativa e testes de endpoints     |
-| **Jest & Supertest**              | Framework de testes unitários e de integração (e2e)                        |
+| **NestJS 11**                     | Framework corporativo em Node.js com arquitetura modular e escalável                |
+| **TypeScript**                    | Desenvolvimento backend tipado com suporte a decoradores                            |
+| **Prisma ORM 7**                  | ORM moderno para modelagem declarativa e geração segura de queries                  |
+| **PostgreSQL**                    | Sistema gerenciador de banco de dados relacional robusto e confiável                |
+| **Passport & JWT**                | Autenticação stateless via JSON Web Tokens e proteção de rotas com Guards           |
+| **Bcrypt.js**                     | Algoritmo criptográfico de dispersão unidirecional com salt para senhas             |
+| **Class Validator & Transformer** | Validação, sanitização e transformação de payloads DTO                              |
+| **Swagger / OpenAPI**             | Geração automatizada de documentação interativa e testes de endpoints               |
+| **Jest & Supertest**              | Framework de testes unitários e de integração (e2e)                                 |
 
 ---
 
