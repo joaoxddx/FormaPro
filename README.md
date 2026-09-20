@@ -1,0 +1,384 @@
+<div align="center">
+
+# 🚀 FormaPRO
+### Plataforma Integrada de Educação Corporativa & Learning Management System (LMS)
+
+[![NestJS](https://img.shields.io/badge/NestJS-11.x-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![React](https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Prisma ORM](https://img.shields.io/badge/Prisma-7.x-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI%203.0-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://swagger.io/)
+
+<p align="center">
+  <b>Capacitação profissional contínua, gestão de carreiras, trilhas de formação e salas de aula interativas em uma única solução full-stack moderna.</b>
+</p>
+
+[Visão Geral](#-visão-geral) •
+[Arquitetura](#-arquitetura-da-solução) •
+[Funcionalidades](#-principais-funcionalidades) •
+[Stack Tecnológica](#-tecnologias-utilizadas) •
+[Modelo de Dados](#-modelo-de-dados-e-entidades) •
+[Como Executar](#-como-executar-o-projeto-localmente) •
+[Documentação da API](#-documentação-interativa-swagger) •
+[Subindo ao GitHub](#-guia-para-subir-ao-github)
+
+---
+
+</div>
+
+## 📖 Visão Geral
+
+O **FormaPRO** é um ecossistema educacional completo voltado para o aprendizado corporativo e desenvolvimento profissional contínuo. A solução integra um **Front-end SPA moderno e responsivo** a uma **API RESTful escalável, fortemente tipada e segura**, oferecendo ambientes especializados tanto para estudantes quanto para administradores e instrutores.
+
+O projeto organiza a jornada do aluno em uma hierarquia pedagógica clara:
+> **Carreira Profissional** ➔ **Trilhas de Aprendizado** ➔ **Cursos Temáticos** ➔ **Módulos Estruturados** ➔ **Aulas & Vídeos**
+
+---
+
+## 🏛 Arquitetura da Solução
+
+O projeto é estruturado no formato monorepo organizado em duas camadas independentes e desacopladas:
+
+```mermaid
+flowchart TD
+    subgraph Client ["🖥️ Front-End (Client SPA)"]
+        UI["Interface do Usuário\n(React 19 + TypeScript + Vite)"]
+        Router["Roteamento Dinâmico\n(React Router DOM)"]
+        Styles["Estilização & Componentes\n(Bootstrap 5 & Lucide Icons)"]
+        AxiosClient["Cliente HTTP\n(Axios com Interceptors JWT)"]
+        UI --> Router --> Styles --> AxiosClient
+    end
+
+    subgraph Server ["⚙️ Back-End (API RESTful)"]
+        Gateway["Servidor HTTP\n(NestJS v11 + Express)"]
+        Guards["Segurança & Autenticação\n(JWT Guard & Passport)"]
+        Pipes["Validação & DTOs\n(class-validator & class-transformer)"]
+        Controllers["Controllers REST\n(Swagger / OpenAPI)"]
+        Services["Camada de Serviços\n(Regras de Negócio)"]
+        ORM["Mapeamento Objeto-Relacional\n(Prisma ORM v7)"]
+
+        Gateway --> Guards --> Pipes --> Controllers --> Services --> ORM
+    end
+
+    subgraph Database ["🗄️ Persistência de Dados"]
+        Postgres[(Banco de Dados Relacional\nPostgreSQL)]
+    end
+
+    AxiosClient -- "Requisições HTTP / JSON (Bearer Token)" --> Gateway
+    ORM -- "Queries SQL Seguras (@prisma/adapter-pg)" --> Postgres
+```
+
+---
+
+## ✨ Principais Funcionalidades
+
+### 🎓 1. Área do Aluno (Student Experience)
+- **Vitrine e Catálogo**: Navegação dinâmica por cursos em destaque, categorias, trilhas de conhecimento e carreiras formativas.
+- **Navegação Drill-Down**: Exploração aprofundada da grade curricular antes e após a matrícula.
+- **Matrículas Flexíveis**: Inscrição em cursos avulsos, trilhas integradas ou adesão a planos de assinatura.
+- **Sala de Aula Virtual (LMS Player)**:
+  - Reprodutor de vídeo dedicado integrado à grade curricular.
+  - Divisão organizada por módulos e lista de aulas.
+  - Marcador de status de conclusão aula a aula em tempo real.
+- **Avaliações & Feedbacks**: Envio de notas e comentários pedagógicos sobre os cursos concluídos.
+- **Certificação Digital**: Emissão de certificados de conclusão com geração de hash/código de autenticidade único para validação.
+
+### 🛠️ 2. Painel Administrativo & Gestão Pedagógica
+- **Gestão de Usuários & Acessos**: Controle de permissões e perfis de usuário (`Aluno`, `Instrutor`, `Administrador`).
+- **Montador de Cursos**: Criação e estruturação ágil de novos cursos, criação de módulos sequenciais e cadastro de aulas com URLs e tempos de duração.
+- **Gestão de Conteúdo**: Cadastro e organização de Categorias, Trilhas de Formação e Carreiras Especializadas.
+- **Controle de Matrículas e Assinaturas**: Acompanhamento de alunos ativos e histórico de inscrições.
+
+### 💳 3. Monetização e Planos de Assinatura
+- **Planos de Acesso**: Definição de planos com diferentes periodicidades (Mensal, Semestral, Anual) e benefícios específicos.
+- **Fluxo de Pagamento**: Interface de checkout para simulação e confirmação de transações.
+- **Histórico Financeiro**: Registro das transações originadas por gateways de pagamento.
+
+---
+
+## 🛠 Tecnologias Utilizadas
+
+### Front-End
+| Tecnologia | Finalidade |
+| :--- | :--- |
+| **React 19** | Biblioteca base para construção de interfaces reativas e performáticas |
+| **TypeScript** | Tipagem estática para maior previsibilidade e segurança de código |
+| **Vite 6** | Bundler de alta performance com hot-module replacement instantâneo |
+| **React Router DOM 7** | Gerenciamento de rotas e navegação client-side |
+| **Bootstrap 5.3 & Icons** | Framework de componentes visuais, grids responsivos e ícones |
+| **Lucide React** | Conjunto moderno e consistente de ícones vetoriais |
+| **Axios** | Cliente HTTP com suporte a interceptors para injeção automática de tokens JWT |
+| **JSON Server** | API mock para suporte a testes e prototipagem local isolada |
+
+### Back-End
+| Tecnologia | Finalidade |
+| :--- | :--- |
+| **NestJS 11** | Framework corporativo em Node.js com arquitetura modular e escalável |
+| **TypeScript** | Desenvolvimento backend tipado com suporte a decoradores |
+| **Prisma ORM 7** | ORM moderno para modelagem declarativa e geração segura de queries |
+| **PostgreSQL** | Sistema gerenciador de banco de dados relacional robusto e confiável |
+| **Passport & JWT** | Autenticação stateless via JSON Web Tokens e proteção de rotas com Guards |
+| **Bcrypt.js** | Algoritmo criptográfico de dispersão unidirecional com salt para senhas |
+| **Class Validator & Transformer** | Validação, sanitização e transformação de payloads DTO |
+| **Swagger / OpenAPI** | Geração automatizada de documentação interativa e testes de endpoints |
+| **Jest & Supertest** | Framework de testes unitários e de integração (e2e) |
+
+---
+
+## 🗄 Modelo de Dados e Entidades
+
+O banco de dados do **FormaPRO** foi projetado seguindo as melhores práticas relacionais, contemplando integridade referencial e normalização:
+
+```mermaid
+erDiagram
+    Usuario ||--o{ Curso : "ministra"
+    Usuario ||--o{ Matricula : "realiza"
+    Usuario ||--o{ ProgressoAula : "executa"
+    Usuario ||--o{ Avaliacao : "publica"
+    Usuario ||--o{ Certificado : "obtém"
+    Usuario ||--o{ Assinatura : "contrata"
+
+    Categoria ||--o{ Curso : "categoriza"
+    Categoria ||--o{ Trilha : "categoriza"
+
+    Curso ||--o{ Modulo : "contém"
+    Curso ||--o{ Matricula : "recebe"
+    Curso ||--o{ Avaliacao : "recebe"
+    Curso ||--o{ TrilhaCurso : "vincula"
+    Curso ||--o{ Certificado : "emite"
+
+    Modulo ||--o{ Aula : "contém"
+    Aula ||--o{ ProgressoAula : "rastreia"
+
+    Trilha ||--o{ TrilhaCurso : "composta por"
+    Trilha ||--o{ CarreiraTrilha : "composta por"
+    Trilha ||--o{ Certificado : "emite"
+
+    Carreira ||--o{ CarreiraTrilha : "composta por"
+
+    Plano ||--o{ Assinatura : "define"
+    Assinatura ||--o{ Pagamento : "gera"
+```
+
+---
+
+## 📂 Estrutura de Pastas
+
+```plaintext
+FormaPRO/
+├── BackEnd/                      # Servidor NestJS & Banco de Dados
+│   ├── prisma/
+│   │   ├── migrations/           # Histórico de migrações relacionais
+│   │   └── schema.prisma         # Modelos e relações do Prisma ORM
+│   ├── src/
+│   │   ├── assinaturas/          # Módulo de Assinaturas de Planos
+│   │   ├── aulas/                # Módulo de Conteúdo e Aulas
+│   │   ├── auth/                 # Autenticação JWT e login
+│   │   ├── avaliacoes/           # Avaliações de cursos pelos alunos
+│   │   ├── carreira-trilhas/     # Associação Carreira x Trilhas
+│   │   ├── carreiras/            # Formações e Carreiras profissionais
+│   │   ├── categoria/            # Categorias temáticas
+│   │   ├── certificados/         # Emissão e validação de certificados
+│   │   ├── cursos/               # Cadastro e catálogo de cursos
+│   │   ├── matriculas/           # Inscrições de alunos
+│   │   ├── modulo/               # Módulos pedagógicos
+│   │   ├── pagamentos/           # Transações financeiras
+│   │   ├── planos/               # Planos de assinatura
+│   │   ├── prisma/               # Prisma Service & Provider de conexão
+│   │   ├── progresso-aulas/      # Tracking aula a aula do aluno
+│   │   ├── trilha-cursos/        # Associação Trilha x Cursos
+│   │   ├── trilhas/              # Trilhas de conhecimento
+│   │   ├── users/                # Gestão de usuários e perfis
+│   │   ├── app.module.ts         # Módulo raiz do NestJS
+│   │   └── main.ts               # Ponto de entrada com CORS e Swagger
+│   ├── .env.example              # Modelo de variáveis de ambiente
+│   ├── package.json              # Dependências e scripts do Back-End
+│   └── README.md                 # Documentação detalhada da API
+│
+├── FrontEnd/                     # Aplicação Single Page Application (React)
+│   ├── public/                   # Recursos estáticos
+│   ├── src/
+│   │   ├── assets/               # Imagens e ícones
+│   │   ├── components/           # Componentes reutilizáveis (Navbar, Footer, etc.)
+│   │   ├── models/               # Interfaces e tipagens TypeScript
+│   │   ├── pages/                # Páginas da aplicação
+│   │   │   ├── AdministracaoPages/ # Painel e abas de gestão administrativa
+│   │   │   ├── CertificadoPages/   # Exibição e validação de certificados
+│   │   │   ├── HomePages/          # Página inicial e catálogo de cursos
+│   │   │   ├── LoginPages/         # Telas de login e cadastro
+│   │   │   ├── MontadorCursoPages/ # Interface de criação de cursos/módulos
+│   │   │   ├── PagamentoPages/     # Checkout e escolha de planos
+│   │   │   ├── PainelAlunoPages/   # Dashboard do estudante
+│   │   │   └── SalaAulaPages/      # Player de vídeo e grade curricular
+│   │   ├── routers/              # Configuração do React Router
+│   │   ├── services/             # Instância Axios e integração com API
+│   │   ├── App.tsx               # Componente principal
+│   │   └── main.tsx              # Ponto de inicialização do React
+│   ├── db.json                   # Base de dados mockada (JSON Server)
+│   ├── package.json              # Dependências e scripts do Front-End
+│   └── vite.config.ts            # Configurações do Vite
+│
+├── .gitignore                    # Arquivo unificado de ignorados pelo Git
+└── README.md                     # Documentação geral do projeto
+```
+
+---
+
+## ⚙️ Como Executar o Projeto Localmente
+
+### 📋 Pré-requisitos
+Certifique-se de possuir instalado em sua máquina:
+- [Node.js](https://nodejs.org/) (versão `18.x` ou superior recomendada)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+- [PostgreSQL](https://www.postgresql.org/) (em execução localmente ou via container Docker)
+- [Git](https://git-scm.com/)
+
+---
+
+### 1️⃣ Configurando e Rodando o Back-End
+
+1. **Acesse a pasta do Back-End:**
+   ```bash
+   cd BackEnd
+   ```
+
+2. **Instale as dependências:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure as Variáveis de Ambiente:**
+   Copie o arquivo `.env.example` para criar seu arquivo `.env`:
+   ```bash
+   # Linux / macOS / Git Bash
+   cp .env.example .env
+
+   # Windows (PowerShell)
+   Copy-Item .env.example .env
+   ```
+
+4. **Edite o arquivo `.env` com os dados do seu PostgreSQL e segredo JWT:**
+   ```env
+   DATABASE_URL="postgresql://postgres:sua_senha@localhost:5432/formapro_db?schema=public"
+   PORT=3000
+   JWT_SECRET="seu_jwt_secret_super_seguro_aqui"
+   ```
+
+5. **Execute as migrações e gere o Prisma Client:**
+   ```bash
+   npx prisma migrate dev
+   npx prisma generate
+   ```
+
+6. **Inicie o servidor NestJS:**
+   ```bash
+   # Modo de desenvolvimento com Hot-Reload
+   npm run start:dev
+   ```
+
+O servidor da API estará disponível em: **`http://localhost:3000`**  
+A documentação interativa Swagger estará acessível em: **`http://localhost:3000/api`**
+
+---
+
+### 2️⃣ Configurando e Rodando o Front-End
+
+1. **Abra outro terminal e acesse a pasta do Front-End:**
+   ```bash
+   cd FrontEnd
+   ```
+
+2. **Instale as dependências:**
+   ```bash
+   npm install
+   ```
+
+3. **Inicie a aplicação React com Vite:**
+   ```bash
+   npm run dev
+   ```
+
+A interface web estará disponível em: **`http://localhost:5173`** (ou porta indicada no terminal).
+
+> 💡 **Dica (Modo Mock):** Caso queira rodar o front-end de forma desacoplada do banco utilizando a API simulada via JSON Server, execute em um terminal separado na pasta `FrontEnd`:
+> ```bash
+> npm run server
+> ```
+> A API simulada responderá em `http://localhost:3001`.
+
+---
+
+## 📑 Documentação Interativa (Swagger)
+
+A API do FormaPRO conta com documentação interativa gerada automaticamente através do OpenAPI/Swagger.
+
+Acesse: 👉 **[http://localhost:3000/api](http://localhost:3000/api)**
+
+### 🔐 Como testar rotas protegidas no Swagger:
+1. Registre um novo usuário através do endpoint `POST /users` ou utilize um usuário já existente.
+2. Efetue login através do endpoint `POST /auth/login` informando `email` e `senha`.
+3. Copie o `access_token` retornado na resposta.
+4. Clique no botão verde **Authorize** no canto superior direito da página do Swagger.
+5. Cole o token no campo de valor e clique em **Authorize**.
+6. Agora todas as requisições protegidas serão autenticadas automaticamente!
+
+---
+
+## 🚀 Guia para Subir ao GitHub
+
+Siga o passo a passo abaixo para inicializar o repositório e enviar todo o projeto para o seu GitHub:
+
+### Passo 1: Limpar repositórios Git internos (caso existam)
+Se a pasta `FrontEnd` ou `BackEnd` tiver um diretório oculto `.git` pré-existente, remova-o antes para que o Git considere todos os arquivos na raiz do monorepo:
+
+```powershell
+# No PowerShell na raiz do projeto (FormaPRO):
+Remove-Item -Recurse -Force FrontEnd\.git -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force BackEnd\.git -ErrorAction SilentlyContinue
+```
+
+### Passo 2: Inicializar o Git na raiz do projeto
+```bash
+git init
+```
+
+### Passo 3: Adicionar e confirmar as alterações
+```bash
+# Adiciona todos os arquivos (o .gitignore evitará o envio de node_modules e .env)
+git add .
+
+# Cria o commit inicial
+git commit -m "feat: projeto completo FormaPRO (Front-end e Back-end)"
+```
+
+### Passo 4: Conectar ao repositório remoto e enviar
+Crie um novo repositório no seu GitHub (ex: `FormaPRO`) e execute:
+
+```bash
+# Define a branch principal como main
+git branch -M main
+
+# Conecta ao seu repositório remoto
+git remote add origin https://github.com/<SEU_USUARIO>/<SEU_REPOSITORIO>.git
+
+# Envia os arquivos para o GitHub
+git push -u origin main
+```
+
+---
+
+## 👥 Autores e Contexto Acadêmico
+
+Projeto desenvolvido no âmbito da disciplina de **Técnicas de Construção de Software 2**, com foco na aplicação prática de padrões arquiteturais modernos, desenvolvimento full-stack, segurança da informação e modelagem relacional de dados.
+
+- **Desenvolvedor**: [João Gomes](https://github.com/joaoxddx)
+- **Curso**: Engenharia de Software / Ciência da Computação
+
+---
+
+## 📄 Licença
+
+Este projeto é disponibilizado para fins educacionais e de estudo. Consulte os arquivos de licença de cada submódulo para maiores detalhes.

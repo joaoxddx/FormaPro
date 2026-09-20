@@ -1,0 +1,298 @@
+// ==========================================
+// Prisma Schema - FormaPRO
+// ==========================================
+
+datasource db {
+  provider = "postgresql" // Altere para "mysql", "sqlite" ou "sqlserver" se necessário
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ------------------------------------------
+// 1. Usuário
+// ------------------------------------------
+model Usuario {
+  ID_Usuario    Int             @id @default(autoincrement())
+  NomeCompleto  String
+  Email         String          @unique
+  SenhaHash     String
+  DataCadastro  DateTime        @default(now())
+  Role          String          @default("student")
+
+  // Relacionamentos
+  cursosComoInstrutor Curso[]        @relation("InstrutorCursos")
+  matriculas          Matricula[]
+  progressos          ProgressoAula[]
+  avaliacoes          Avaliacao[]
+  certificados        Certificado[]
+  assinaturas         Assinatura[]
+
+  @@map("usuarios")
+}
+
+// ------------------------------------------
+// 2. Categoria
+// ------------------------------------------
+model Categoria {
+  ID_Categoria Int      @id @default(autoincrement())
+  Nome         String
+  Descricao    String
+
+  // Relacionamentos
+  cursos       Curso[]
+  trilhas      Trilha[]
+
+  @@map("categorias")
+}
+
+// ------------------------------------------
+// 3. Curso
+// ------------------------------------------
+model Curso {
+  ID_Curso       Int             @id @default(autoincrement())
+  Titulo         String
+  Descricao      String
+  ID_Instrutor   Int
+  ID_Categoria   Int
+  Nivel          String
+  DataPublicacao DateTime        @default(now())
+  TotalAulas     Int             @default(0)
+  TotalHoras     Float           @default(0)
+  ImgUrl         String?
+
+  // Relacionamentos
+  instrutor      Usuario         @relation("InstrutorCursos", fields: [ID_Instrutor], references: [ID_Usuario], onDelete: Cascade)
+  categoria      Categoria       @relation(fields: [ID_Categoria], references: [ID_Categoria], onDelete: Restrict)
+  modulos        Modulo[]
+  matriculas     Matricula[]
+  avaliacoes     Avaliacao[]
+  trilhaCursos   TrilhaCurso[]
+  certificados   Certificado[]
+
+  @@map("cursos")
+}
+
+// ------------------------------------------
+// 4. Módulo
+// ------------------------------------------
+model Modulo {
+  ID_Modulo Int     @id @default(autoincrement())
+  ID_Curso  Int
+  Titulo    String
+  Ordem     Int
+
+  // Relacionamentos
+  curso     Curso   @relation(fields: [ID_Curso], references: [ID_Curso], onDelete: Cascade)
+  aulas     Aula[]
+
+  @@map("modulos")
+}
+
+// ------------------------------------------
+// 5. Aula
+// ------------------------------------------
+model Aula {
+  ID_Aula        Int             @id @default(autoincrement())
+  ID_Modulo      Int
+  Titulo         String
+  TipoConteudo   String
+  URL_Conteudo   String
+  DuracaoMinutos Int
+  Ordem          Int
+
+  // Relacionamentos
+  modulo         Modulo          @relation(fields: [ID_Modulo], references: [ID_Modulo], onDelete: Cascade)
+  progressos     ProgressoAula[]
+
+  @@map("aulas")
+}
+
+// ------------------------------------------
+// 6. Matrícula
+// ------------------------------------------
+model Matricula {
+  ID_Matricula  Int       @id @default(autoincrement())
+  ID_Usuario    Int
+  ID_Curso      Int
+  DataMatricula DateTime  @default(now())
+  DataConclusao DateTime?
+
+  // Relacionamentos
+  usuario       Usuario   @relation(fields: [ID_Usuario], references: [ID_Usuario], onDelete: Cascade)
+  curso         Curso     @relation(fields: [ID_Curso], references: [ID_Curso], onDelete: Cascade)
+
+  @@unique([ID_Usuario, ID_Curso])
+  @@map("matriculas")
+}
+
+// ------------------------------------------
+// 7. Progresso da Aula
+// ------------------------------------------
+model ProgressoAula {
+  ID_Usuario    Int
+  ID_Aula       Int
+  DataConclusao DateTime?
+  Status        String    @default("pendente")
+
+  // Relacionamentos
+  usuario       Usuario   @relation(fields: [ID_Usuario], references: [ID_Usuario], onDelete: Cascade)
+  aula          Aula      @relation(fields: [ID_Aula], references: [ID_Aula], onDelete: Cascade)
+
+  @@id([ID_Usuario, ID_Aula])
+  @@map("progresso_aulas")
+}
+
+// ------------------------------------------
+// 8. Avaliação
+// ------------------------------------------
+model Avaliacao {
+  ID_Avaliacao  Int      @id @default(autoincrement())
+  ID_Usuario    Int
+  ID_Curso      Int
+  Nota          Float
+  Comentario    String?
+  DataAvaliacao DateTime @default(now())
+
+  // Relacionamentos
+  usuario       Usuario  @relation(fields: [ID_Usuario], references: [ID_Usuario], onDelete: Cascade)
+  curso         Curso    @relation(fields: [ID_Curso], references: [ID_Curso], onDelete: Cascade)
+
+  @@map("avaliacoes")
+}
+
+// ------------------------------------------
+// 9. Trilha
+// ------------------------------------------
+model Trilha {
+  ID_Trilha      Int              @id @default(autoincrement())
+  Titulo         String
+  Descricao      String
+  ID_Categoria   Int
+
+  // Relacionamentos
+  categoria      Categoria        @relation(fields: [ID_Categoria], references: [ID_Categoria], onDelete: Restrict)
+  trilhaCursos   TrilhaCurso[]
+  carreiraTrilhas CarreiraTrilha[]
+  certificados   Certificado[]
+
+  @@map("trilhas")
+}
+
+// ------------------------------------------
+// 10. TrilhaCurso (Tabela N:N entre Trilha e Curso)
+// ------------------------------------------
+model TrilhaCurso {
+  ID_Trilha Int
+  ID_Curso  Int
+  Ordem     Int
+
+  // Relacionamentos
+  trilha    Trilha @relation(fields: [ID_Trilha], references: [ID_Trilha], onDelete: Cascade)
+  curso     Curso  @relation(fields: [ID_Curso], references: [ID_Curso], onDelete: Cascade)
+
+  @@id([ID_Trilha, ID_Curso])
+  @@map("trilha_cursos")
+}
+
+// ------------------------------------------
+// 11. Certificado
+// ------------------------------------------
+model Certificado {
+  ID_Certificado    Int       @id @default(autoincrement())
+  ID_Usuario        Int
+  ID_Curso          Int?
+  ID_Trilha         Int?
+  CodigoVerificacao String    @unique
+  DataEmissao       DateTime  @default(now())
+
+  // Relacionamentos
+  usuario           Usuario   @relation(fields: [ID_Usuario], references: [ID_Usuario], onDelete: Cascade)
+  curso             Curso?    @relation(fields: [ID_Curso], references: [ID_Curso], onDelete: SetNull)
+  trilha            Trilha?   @relation(fields: [ID_Trilha], references: [ID_Trilha], onDelete: SetNull)
+
+  @@map("certificados")
+}
+
+// ------------------------------------------
+// 12. Plano
+// ------------------------------------------
+model Plano {
+  ID_Plano     Int          @id @default(autoincrement())
+  Nome         String
+  Descricao    String
+  Preco        Float
+  DuracaoMeses Int
+
+  // Relacionamentos
+  assinaturas  Assinatura[]
+
+  @@map("planos")
+}
+
+// ------------------------------------------
+// 13. Assinatura
+// ------------------------------------------
+model Assinatura {
+  ID_Assinatura Int         @id @default(autoincrement())
+  ID_Usuario    Int
+  ID_Plano      Int
+  DataInicio    DateTime    @default(now())
+  DataFim       DateTime?
+
+  // Relacionamentos
+  usuario       Usuario     @relation(fields: [ID_Usuario], references: [ID_Usuario], onDelete: Cascade)
+  plano         Plano       @relation(fields: [ID_Plano], references: [ID_Plano], onDelete: Restrict)
+  pagamentos    Pagamento[]
+
+  @@map("assinaturas")
+}
+
+// ------------------------------------------
+// 14. Pagamento
+// ------------------------------------------
+model Pagamento {
+  ID_Pagamento         Int        @id @default(autoincrement())
+  ID_Assinatura        Int
+  ValorPago            Float
+  DataPagamento        DateTime   @default(now())
+  MetodoPagamento      String
+  Id_Transacao_Gateway String
+
+  // Relacionamentos
+  assinatura           Assinatura @relation(fields: [ID_Assinatura], references: [ID_Assinatura], onDelete: Cascade)
+
+  @@map("pagamentos")
+}
+
+// ------------------------------------------
+// 15. Carreira
+// ------------------------------------------
+model Carreira {
+  ID_Carreira     Int              @id @default(autoincrement())
+  Titulo          String
+  Descricao       String
+
+  // Relacionamentos
+  carreiraTrilhas CarreiraTrilha[]
+
+  @@map("carreiras")
+}
+
+// ------------------------------------------
+// 16. CarreiraTrilha (Tabela N:N entre Carreira e Trilha)
+// ------------------------------------------
+model CarreiraTrilha {
+  ID_Carreira Int
+  ID_Trilha   Int
+  Ordem       Int
+
+  // Relacionamentos
+  carreira    Carreira @relation(fields: [ID_Carreira], references: [ID_Carreira], onDelete: Cascade)
+  trilha      Trilha   @relation(fields: [ID_Trilha], references: [ID_Trilha], onDelete: Cascade)
+
+  @@id([ID_Carreira, ID_Trilha])
+  @@map("carreira_trilhas")
+}
